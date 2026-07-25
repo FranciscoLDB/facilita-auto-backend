@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: facilita-auto-backend
+
+  # Define o perfil 'dev' como ativo por padrão
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+  # Formatação Padrão de JSON na API
+  jackson:
+    default-property-inclusion: non_null
+    time-zone: UTC
+
+# Propriedades genéricas do sistema
+app:
+  tenant:
+    header-name: X-Tenant-ID

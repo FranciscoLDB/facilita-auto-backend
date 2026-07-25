@@ -1,0 +1,27 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  # Conexão automática com o PostgreSQL do Railway
+  datasource:
+    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  # Execução do Flyway no banco de Produção
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0   # Deixe 0 para que ele rode os scripts V1 a V5 no banco novo do Railway
+
+  # Configuração do JPA / Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
