@@ -2,13 +2,15 @@
 CREATE TABLE service_orders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tenant_id UUID NOT NULL REFERENCES tenants(id),
-    claim_number VARCHAR(50) NOT NULL,                  -- Claim/Dispatch ID from Insurance (Acionamento) [RF11]
     insurance_company_id UUID NOT NULL REFERENCES insurance_companies(id),
     service_type_id UUID NOT NULL REFERENCES service_types(id),
     operator_id UUID NOT NULL REFERENCES users(id),     -- Operator who created the order
     driver_id UUID REFERENCES users(id),               -- Assigned driver (Optional at creation)
     yard_id UUID REFERENCES yards(id),                 -- Yard location if vehicle is in custody [RF27]
     parent_service_order_id UUID REFERENCES service_orders(id), -- Linked OS for second-leg trips [RF29]
+
+    claim_number VARCHAR(50) NOT NULL,                  -- Claim/Dispatch ID from Insurance (Acionamento) [RF11]
+    request_number INT,                                 -- request number from Insurance, (1, 2, 3...)
 
     -- Status Management [RF09]
     status VARCHAR(30) NOT NULL DEFAULT 'PENDING',

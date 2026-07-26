@@ -1,4 +1,4 @@
-package com.fldb.facilita.auto.backend;
+package com.fldb.facilita.auto;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

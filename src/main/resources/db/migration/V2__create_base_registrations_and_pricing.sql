@@ -7,7 +7,7 @@ CREATE TABLE insurance_companies (
     operational_system_url VARCHAR(255),            -- Portal URL for operational/dispatch routines
     closing_system_url VARCHAR(255),                -- Portal URL for monthly financial closing
     system_username VARCHAR(100),                   -- Portal login username
-    system_password_encrypted VARCHAR(255),         -- Encrypted portal password
+    system_password VARCHAR(100),                   -- Encrypted portal password
     contact_phones TEXT,                            -- Emergency and support phone numbers
     notes TEXT,                                     -- Operational notes and instructions
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
