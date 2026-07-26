@@ -44,21 +44,44 @@ CREATE TABLE service_orders (
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     -- Constraint to enforce valid operational status values
-    CONSTRAINT chk_so_status CHECK (status IN ('PENDING', 'EN_ROUTE', 'ON_SITE', 'IN_YARD', 'COMPLETED', 'CANCELLED'))
+    CONSTRAINT chk_so_status CHECK (
+        status IN (
+            'PENDING',
+            'EN_ROUTE_TO_ORIGIN',
+            'ON_SITE_ORIGIN',
+            'EN_ROUTE_TO_DESTINATION',
+            'IN_YARD',
+            'COMPLETED',
+            'SCHEDULED',
+            'CANCELLED'
+        )
+    )
 );
 
 -- 2. Service Order Line Items (Saída, KM Excedente, HP, HT, Patins, etc.)
 CREATE TABLE service_order_items (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     service_order_id UUID NOT NULL REFERENCES service_orders(id) ON DELETE CASCADE,
-    item_type VARCHAR(50) NOT NULL,                    -- 'BASE_FEE', 'EXTRA_KM', 'DIRT_KM', 'IDLE_HOUR', 'WORKED_HOUR', 'SKATE', 'OTHER'
+    item_type VARCHAR(50) NOT NULL,                    -- 'SAIDA_FIXA', 'KM_EXCEDENTE', etc.
     description VARCHAR(100),                          -- Optional custom description
     authorization_code VARCHAR(50),                    -- Optional authorization password/code from insurance company (Senha)
     quantity DECIMAL(10,2) NOT NULL DEFAULT 1.00,       -- Quantity (e.g., 40.00 KMs or 1.50 Hours)
     unit_price DECIMAL(10,2) NOT NULL DEFAULT 0.00,     -- Price per unit
     total_price DECIMAL(10,2) NOT NULL DEFAULT 0.00,    -- (quantity * unit_price)
     is_manual_override BOOLEAN NOT NULL DEFAULT FALSE, -- Identifies if price/qty was manually changed by operator
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+    status VARCHAR(30) NOT NULL DEFAULT 'TO_CHARGE',
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    -- Constraint para validar os status do item
+    CONSTRAINT chk_so_item_status CHECK (
+        status IN (
+            'TO_CHARGE',
+            'TO_NEGOTIATE',
+            'IN_NEGOTIATION',
+            'POSTED',
+            'CANCELLED'
+        )
+    )
 );
 
 -- 3. Status Change Timeline (Audit Trail) [RF09]

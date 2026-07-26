@@ -29,7 +29,12 @@ CREATE TABLE yards (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tenant_id UUID NOT NULL REFERENCES tenants(id),
     name VARCHAR(100) NOT NULL,
-    address VARCHAR(255) NOT NULL,
+    -- Location / yard (Rua, Bairro, Cidade, Estado, Complemento)
+    yard_street VARCHAR(150) NOT NULL,
+    yard_neighborhood VARCHAR(100) NOT NULL,
+    yard_city VARCHAR(100) NOT NULL,
+    yard_state VARCHAR(50) NOT NULL,
+    yard_complement VARCHAR(100),
     max_capacity INT NOT NULL,
     manager_id UUID REFERENCES users(id),
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
