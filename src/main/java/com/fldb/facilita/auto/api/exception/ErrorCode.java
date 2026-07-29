@@ -10,7 +10,8 @@ public enum ErrorCode {
     TENANT_ALREADY_EXISTS("TNT-001", "Já existe um tenant cadastrado com este CNPJ."),
     TENANT_NOT_FOUND("TNT-002", "Tenant não encontrado."),
 
-    INTERNAL_ERROR("SYS-500", "Erro interno no servidor");
+    INTERNAL_ERROR("SYS-500", "Erro interno no servidor"),
+    DATABASE_ERROR("SYS-501", "Erro na comunicação com o banco de dados.");
 
     @JsonValue
     private final String code;

@@ -3,6 +3,8 @@ package com.fldb.facilita.auto.api.exception;
 import com.fldb.facilita.auto.api.exception.model.ApiResponseError;
 import com.fldb.facilita.auto.api.exception.model.GeneralErrorItem;
 import com.fldb.facilita.auto.api.exception.model.ValidationErrorItem;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -10,8 +12,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -115,6 +119,30 @@ public class GlobalExceptionHandler {
                 .message("Erro interno no servidor.")
                 .detailedMessage(ex.getMessage())
                 .errors(errorItem != null ? List.of(errorItem) : null)
+                .build();
+
+        return ResponseEntity.status(status).body(response);
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<ApiResponseError> handleDataAccessException(DataAccessException ex) {
+        // Log do erro real para auditoria no console/arquivos de log
+        log.error("Erro de acesso ao banco de dados: ", ex);
+
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        ApiResponseError response = ApiResponseError.builder()
+                .statusCode(status.value())
+                .statusMessage(status.name())
+                .message("Falha na comunicação com o banco de dados.")
+                .detailedMessage("Não foi possível concluir a operação devido a uma indisponibilidade ou falha temporária no banco de dados.")
+                .timestamp(OffsetDateTime.now())
+                .errors(List.of(
+                        GeneralErrorItem.builder()
+                                .code(ErrorCode.DATABASE_ERROR) // SYS-501
+                                .message(ErrorCode.DATABASE_ERROR.getDefaultMessage())
+                                .build()
+                ))
                 .build();
 
         return ResponseEntity.status(status).body(response);
