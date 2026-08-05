@@ -1,5 +1,9 @@
-package com.fldb.facilita.auto.api.exception;
+package com.fldb.facilita.auto.api.exception.handler;
 
+import com.fldb.facilita.auto.api.exception.BusinessException;
+import com.fldb.facilita.auto.api.exception.ErrorCode;
+import com.fldb.facilita.auto.api.exception.ResourceNotFoundException;
+import com.fldb.facilita.auto.api.exception.SystemException;
 import com.fldb.facilita.auto.api.exception.model.ApiResponseError;
 import com.fldb.facilita.auto.api.exception.model.GeneralErrorItem;
 import com.fldb.facilita.auto.api.exception.model.ValidationErrorItem;
@@ -18,6 +22,26 @@ import java.util.List;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(org.springframework.security.core.AuthenticationException.class)
+    public ResponseEntity<ApiResponseError> handleAuthenticationException(org.springframework.security.core.AuthenticationException ex) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+
+        GeneralErrorItem errorItem = GeneralErrorItem.builder()
+                .code(ErrorCode.AUTH_INVALID_CREDENTIALS)
+                .message("E-mail ou senha inválidos.")
+                .build();
+
+        ApiResponseError response = ApiResponseError.builder()
+                .statusCode(status.value())
+                .statusMessage(status.name())
+                .message("Não autorizado.")
+                .detailedMessage(ex.getMessage())
+                .errors(List.of(errorItem))
+                .build();
+
+        return ResponseEntity.status(status).body(response);
+    }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiResponseError> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {

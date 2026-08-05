@@ -6,6 +6,8 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 
+    AUTH_INVALID_CREDENTIALS("AUT-001", "Credenciais inválidas."),
+
     // Tenant
     TENANT_ALREADY_EXISTS("TNT-001", "Já existe um tenant cadastrado com este CNPJ."),
     TENANT_NOT_FOUND("TNT-002", "Tenant não encontrado."),
