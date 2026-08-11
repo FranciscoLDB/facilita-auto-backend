@@ -11,9 +11,11 @@ public enum ErrorCode {
     // Tenant
     TENANT_ALREADY_EXISTS("TNT-001", "Já existe um tenant cadastrado com este CNPJ."),
     TENANT_NOT_FOUND("TNT-002", "Tenant não encontrado."),
+    TENANT_INVALID_ID("TNT-003", "ID do tenant inválido."),
 
     INTERNAL_ERROR("SYS-500", "Erro interno no servidor"),
-    DATABASE_ERROR("SYS-501", "Erro na comunicação com o banco de dados.");
+    DATABASE_ERROR("SYS-501", "Erro na comunicação com o banco de dados."),
+    DATA_INTEGRITY_ERROR("SYS-502", "Violação de integridade dos dados.");
 
     @JsonValue
     private final String code;

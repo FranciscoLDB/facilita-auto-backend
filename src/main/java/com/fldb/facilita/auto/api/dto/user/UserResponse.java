@@ -1,5 +1,6 @@
 package com.fldb.facilita.auto.api.dto.user;
 
+import com.fldb.facilita.auto.domain.entity.User;
 import com.fldb.facilita.auto.domain.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,4 +22,16 @@ public class UserResponse {
     private UserRole role;
     private Boolean active;
     private OffsetDateTime createdAt;
+
+    public static UserResponse fromEntity(User user) {
+        return UserResponse.builder()
+                .id(user.getId())
+                .tenantId(user.getTenantId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .active(user.getIsActive())
+                .createdAt(user.getCreatedAt())
+                .build();
+    }
 }

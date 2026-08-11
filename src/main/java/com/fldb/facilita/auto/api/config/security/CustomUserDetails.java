@@ -21,7 +21,7 @@ public class CustomUserDetails implements UserDetails {
 
     public CustomUserDetails(User user) {
         this.id = user.getId();
-        this.tenantId = user.getTenant().getId();
+        this.tenantId = user.getTenantId();
         this.username = user.getEmail();
         this.password = user.getPasswordHash();
         this.authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));

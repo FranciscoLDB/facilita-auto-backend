@@ -1,6 +1,7 @@
 package com.fldb.facilita.auto.api.controller;
 
 import com.fldb.facilita.auto.api.config.security.JwtTokenProvider;
+import com.fldb.facilita.auto.domain.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.UUID;
@@ -21,27 +22,16 @@ public class JwtTestUtil {
         return jwtTokenProvider.createToken(userId, email, tenantId, role);
     }
 
-    /**
-     * Gera um token para um usuário admin do tenant 1
-     */
-    public String generateAdminToken() {
-        return generateValidToken(
-                UUID.fromString("a1111111-1111-1111-1111-111111111111"),
-                "admin@tenant1.com",
-                UUID.fromString("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"),
-                "ADMIN"
-        );
+    public String generateValidToken(User user) {
+        return jwtTokenProvider.createToken(user.getId(), user.getEmail(), user.getTenantId(), user.getRole().name());
     }
 
-    /**
-     * Gera um token para um usuário operator do tenant 1
-     */
-    public String generateOperatorToken() {
+    public String generateAdminTokenForTenant(UUID tenantId) {
         return generateValidToken(
-                UUID.fromString("a2222222-2222-2222-2222-222222222222"),
-                "operator@tenant1.com",
-                UUID.fromString("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"),
-                "OPERATOR"
+                UUID.fromString("a1111111-1111-1111-1111-111111111111"),
+                "admin@tenant.com",
+                tenantId,
+                "ADMIN"
         );
     }
 
@@ -57,17 +47,6 @@ public class JwtTestUtil {
         );
     }
 
-    /**
-     * Gera um token para um usuário admin do tenant 2
-     */
-    public String generateAdminTokenTenant2() {
-        return generateValidToken(
-                UUID.fromString("b1111111-1111-1111-1111-111111111111"),
-                "admin@tenant2.com",
-                UUID.fromString("b1ffcd00-0d1c-5fa9-cc7e-7cc0ce491b22"),
-                "ADMIN"
-        );
-    }
 
     /**
      * Gera um token expirado (data past)

@@ -1,14 +1,12 @@
 package com.fldb.facilita.auto.api.exception.handler;
 
-import com.fldb.facilita.auto.api.exception.BusinessException;
-import com.fldb.facilita.auto.api.exception.ErrorCode;
-import com.fldb.facilita.auto.api.exception.ResourceNotFoundException;
-import com.fldb.facilita.auto.api.exception.SystemException;
+import com.fldb.facilita.auto.api.exception.*;
 import com.fldb.facilita.auto.api.exception.model.ApiResponseError;
 import com.fldb.facilita.auto.api.exception.model.GeneralErrorItem;
 import com.fldb.facilita.auto.api.exception.model.ValidationErrorItem;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -165,6 +163,27 @@ public class GlobalExceptionHandler {
                         GeneralErrorItem.builder()
                                 .code(ErrorCode.DATABASE_ERROR) // SYS-501
                                 .message(ErrorCode.DATABASE_ERROR.getDefaultMessage())
+                                .build()
+                ))
+                .build();
+
+        return ResponseEntity.status(status).body(response);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponseError> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        ApiResponseError response = ApiResponseError.builder()
+                .statusCode(status.value())
+                .statusMessage(status.name())
+                .message("Violação de integridade dos dados.")
+                .detailedMessage("Não foi possível concluir a operação devido a uma violação de integridade dos dados.")
+                .timestamp(OffsetDateTime.now())
+                .errors(List.of(
+                        GeneralErrorItem.builder()
+                                .code(ErrorCode.DATA_INTEGRITY_ERROR)
+                                .message(ErrorCode.DATA_INTEGRITY_ERROR.getDefaultMessage())
                                 .build()
                 ))
                 .build();

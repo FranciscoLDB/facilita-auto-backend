@@ -5,10 +5,13 @@ import com.fldb.facilita.auto.api.config.security.CustomUserDetails;
 import com.fldb.facilita.auto.api.dto.ApiResponseData;
 import com.fldb.facilita.auto.api.dto.user.CreateUserRequest;
 import com.fldb.facilita.auto.api.dto.user.UserResponse;
+import com.fldb.facilita.auto.api.exception.BusinessException;
 import com.fldb.facilita.auto.domain.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,39 +31,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<ApiResponseData<UserResponse>> create(
-            @Valid @RequestBody CreateUserRequest request,
-            @RequestHeader(value = "X-Admin-Api-Key", required = false) String apiKey,
-            @RequestHeader(value = "X-Tenant-ID", required = false) String tenantHeader) {
+    public ResponseEntity<ApiResponseData<UserResponse>> create(@Valid @RequestBody CreateUserRequest request) {
         log.info("Creating user");
-
-        // Fluxo 1: Autenticação via API Key
-        if (apiKey != null) {
-            return processApiKeyFlow(request, tenantHeader);
-        }
-
-        // Fluxo 2: Autenticação via Token (JWT)
-        return processTokenFlow(request);
-    }
-
-    // =========================================================================
-    // Fluxos de Processamento
-    // =========================================================================
-
-    private ResponseEntity<ApiResponseData<UserResponse>> processApiKeyFlow(CreateUserRequest request, String tenantHeader) {
-        if (tenantHeader == null || tenantHeader.isBlank()) {
-            return buildErrorResponse(HttpStatus.BAD_REQUEST, "X-Tenant-ID is required.");
-        }
-
-        try {
-            UUID tenantId = UUID.fromString(tenantHeader);
-            return executeUserCreation(request, tenantId);
-        } catch (IllegalArgumentException ex) {
-            return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid X-Tenant-ID format.");
-        }
-    }
-
-    private ResponseEntity<ApiResponseData<UserResponse>> processTokenFlow(CreateUserRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth == null || !auth.isAuthenticated() || auth.getPrincipal() == null) {
@@ -68,28 +40,7 @@ public class UserController {
         }
 
         UUID tenantId = extractTenantIdFromPrincipal(auth.getPrincipal());
-        if (tenantId == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
 
-        return executeUserCreation(request, tenantId);
-    }
-
-    // =========================================================================
-    // Métodos Auxiliares
-    // =========================================================================
-
-    private UUID extractTenantIdFromPrincipal(Object principal) {
-        if (principal instanceof AuthTokenPrincipal atp) {
-            return atp.getTenantId();
-        }
-        if (principal instanceof CustomUserDetails cud) {
-            return cud.getTenantId();
-        }
-        return null;
-    }
-
-    private ResponseEntity<ApiResponseData<UserResponse>> executeUserCreation(CreateUserRequest request, UUID tenantId) {
         UserResponse response = userService.create(request, tenantId);
         log.info("User created successfully for tenant: {}", tenantId);
 
@@ -102,11 +53,70 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
-    private ResponseEntity<ApiResponseData<UserResponse>> buildErrorResponse(HttpStatus status, String message) {
-        ApiResponseData<UserResponse> error = ApiResponseData.<UserResponse>builder()
-                .statusCode(status.value())
-                .message(message)
+    @GetMapping
+    public ResponseEntity<ApiResponseData<Page<UserResponse>>> findAll(Pageable pageable) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null || !auth.isAuthenticated() || auth.getPrincipal() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Page<UserResponse> users = userService.findAll(pageable);
+
+        ApiResponseData<Page<UserResponse>> response = ApiResponseData.<Page<UserResponse>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("Users retrieved successfully.")
+                .data(users)
                 .build();
-        return ResponseEntity.status(status).body(error);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponseData<Void>> delete(@PathVariable UUID id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null || !auth.isAuthenticated() || auth.getPrincipal() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Must not delete own user
+        if (id.equals(extractUserIdFromPrincipal(auth.getPrincipal()))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // =========================================================================
+    // Métodos Auxiliares
+    // =========================================================================
+
+    private UUID extractUserIdFromPrincipal(Object principal) {
+        if (principal instanceof AuthTokenPrincipal atp) {
+            return atp.getId();
+        }
+        if (principal instanceof CustomUserDetails cud) {
+            return cud.getId();
+        }
+        return null;
+    }
+
+    private UUID extractTenantIdFromPrincipal(Object principal) {
+        UUID tenantId = null;
+
+        if (principal instanceof AuthTokenPrincipal atp) {
+            tenantId = atp.getTenantId();
+        }
+        if (principal instanceof CustomUserDetails cud) {
+            tenantId = cud.getTenantId();
+        }
+
+        if (tenantId == null) {
+            throw new BusinessException("Tenant não encontrado.");
+        }
+
+        return tenantId;
     }
 }

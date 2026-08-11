@@ -11,6 +11,4 @@ import java.util.UUID;
 public interface TenantRepository extends JpaRepository<Tenant, UUID> {
 
     boolean existsByTaxId(String taxId);
-
-    Optional<Tenant> findByTaxId(String taxId);
 }
