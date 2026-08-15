@@ -1,14 +1,17 @@
 package com.fldb.facilita.auto.domain.service;
 
+import com.fldb.facilita.auto.api.config.security.AuthTokenPrincipal;
+import com.fldb.facilita.auto.api.config.security.CustomUserDetails;
 import com.fldb.facilita.auto.api.dto.user.CreateUserRequest;
 import com.fldb.facilita.auto.api.dto.user.UserResponse;
 import com.fldb.facilita.auto.api.exception.BusinessException;
 import com.fldb.facilita.auto.domain.entity.User;
-import com.fldb.facilita.auto.domain.repository.TenantRepository;
 import com.fldb.facilita.auto.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,13 +26,12 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public UserResponse create(CreateUserRequest request, UUID tenantId) {
+    public UserResponse create(CreateUserRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new BusinessException("Já existe um usuário cadastrado com este e-mail.");
         }
 
         User user = User.builder()
-                .tenantId(tenantId)
                 .name(request.getName())
                 .email(request.getEmail())
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
@@ -37,7 +39,7 @@ public class UserService {
                 .isActive(true)
                 .build();
 
-        userRepository.save(user);
+        userRepository.saveAndFlush(user);
 
         return UserResponse.builder()
                 .id(user.getId())

@@ -6,6 +6,7 @@ import com.fldb.facilita.auto.api.dto.ApiResponseData;
 import com.fldb.facilita.auto.api.dto.user.CreateUserRequest;
 import com.fldb.facilita.auto.api.dto.user.UserResponse;
 import com.fldb.facilita.auto.api.exception.BusinessException;
+import com.fldb.facilita.auto.domain.service.PrincipalUtil;
 import com.fldb.facilita.auto.domain.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,16 +34,9 @@ public class UserController {
     @PostMapping
     public ResponseEntity<ApiResponseData<UserResponse>> create(@Valid @RequestBody CreateUserRequest request) {
         log.info("Creating user");
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if (auth == null || !auth.isAuthenticated() || auth.getPrincipal() == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        UUID tenantId = extractTenantIdFromPrincipal(auth.getPrincipal());
-
-        UserResponse response = userService.create(request, tenantId);
-        log.info("User created successfully for tenant: {}", tenantId);
+        UserResponse response = userService.create(request);
+        log.info("User created successfully for tenant: {}", response.getTenantId());
 
         ApiResponseData<UserResponse> apiResponse = ApiResponseData.<UserResponse>builder()
                 .statusCode(HttpStatus.CREATED.value())
@@ -55,12 +49,6 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<ApiResponseData<Page<UserResponse>>> findAll(Pageable pageable) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (auth == null || !auth.isAuthenticated() || auth.getPrincipal() == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
         Page<UserResponse> users = userService.findAll(pageable);
 
         ApiResponseData<Page<UserResponse>> response = ApiResponseData.<Page<UserResponse>>builder()
@@ -81,7 +69,7 @@ public class UserController {
         }
 
         // Must not delete own user
-        if (id.equals(extractUserIdFromPrincipal(auth.getPrincipal()))) {
+        if (id.equals(PrincipalUtil.extractUserIdFromPrincipal(auth.getPrincipal()))) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -89,34 +77,4 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    // =========================================================================
-    // Métodos Auxiliares
-    // =========================================================================
-
-    private UUID extractUserIdFromPrincipal(Object principal) {
-        if (principal instanceof AuthTokenPrincipal atp) {
-            return atp.getId();
-        }
-        if (principal instanceof CustomUserDetails cud) {
-            return cud.getId();
-        }
-        return null;
-    }
-
-    private UUID extractTenantIdFromPrincipal(Object principal) {
-        UUID tenantId = null;
-
-        if (principal instanceof AuthTokenPrincipal atp) {
-            tenantId = atp.getTenantId();
-        }
-        if (principal instanceof CustomUserDetails cud) {
-            tenantId = cud.getTenantId();
-        }
-
-        if (tenantId == null) {
-            throw new BusinessException("Tenant não encontrado.");
-        }
-
-        return tenantId;
-    }
 }
