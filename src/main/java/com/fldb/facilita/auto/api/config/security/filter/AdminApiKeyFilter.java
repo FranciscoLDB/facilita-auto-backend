@@ -32,34 +32,21 @@ public class AdminApiKeyFilter extends OncePerRequestFilter {
 
     private static final String HEADER_NAME = "X-Admin-Api-Key";
     private static final String HEADER_TENANT_ID = "X-Tenant-ID";
+    private static final String TENANTURI = "/api/v1/tenants";
 
     @Value("${app.security.admin-api-key}")
     private String adminApiKey;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
-
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestApiKey = request.getHeader(HEADER_NAME);
 
         if (requestApiKey != null && requestApiKey.equals(adminApiKey)) {
-
-            // Read X-Tenant-ID header if present
-            String tenantHeader = request.getHeader(HEADER_TENANT_ID);
             UUID tenantId = null;
 
-            if (tenantHeader != null && !tenantHeader.isBlank()) {
-                try {
-                    tenantId = UUID.fromString(tenantHeader);
-                    if (!tenantRepository.existsById(tenantId)) {
-                        setResponse(response, "Tenant não encontrado.");
-                        return;
-                    }
-                } catch (Exception e) {
-                    setResponse(response, e.getMessage());
-                    return;
-                }
+            if (!request.getRequestURI().contains(TENANTURI)){
+                tenantId = getTenantId(request, response);
+                if (tenantId == null) return;
             }
 
             // Create AuthTokenPrincipal containing the target tenantId from header
@@ -80,6 +67,23 @@ public class AdminApiKeyFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private UUID getTenantId(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        UUID tenantId;
+        // Read X-Tenant-ID header if present
+        String tenantHeader = request.getHeader(HEADER_TENANT_ID);
+        try {
+            tenantId = UUID.fromString(tenantHeader);
+            if (!tenantRepository.existsById(tenantId)) {
+                setResponse(response, "Tenant não encontrado.");
+                return null;
+            }
+        } catch (Exception e) {
+            setResponse(response, e.getMessage());
+            return null;
+        }
+        return tenantId;
     }
 
     private static void setResponse(HttpServletResponse response, String detailedMessage) throws IOException {

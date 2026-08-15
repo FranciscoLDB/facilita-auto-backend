@@ -7,10 +7,7 @@ import com.fldb.facilita.auto.domain.enums.UserRole;
 import com.fldb.facilita.auto.domain.repository.TenantRepository;
 import com.fldb.facilita.auto.domain.repository.UserRepository;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -41,7 +38,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserControllerIT {
@@ -120,6 +116,12 @@ class UserControllerIT {
                 TENANT_1_ID, runInTenantContext(UUID.fromString(TENANT_1_ID), () -> userRepository.findAll()),
                 TENANT_2_ID, runInTenantContext(UUID.fromString(TENANT_2_ID), () -> userRepository.findAll())
         );
+    }
+
+    @AfterAll
+    void clearData() {
+        userRepository.deleteAll();
+        tenantRepository.deleteAll();
     }
 
     @Test
@@ -264,7 +266,7 @@ class UserControllerIT {
     @DisplayName("Cenário 8: Deve retornar HTTP 500 com JSON padrão quando o banco de dados estiver fora do ar")
     void shouldReturn500WhenDatabaseIsUnavailable() throws Exception {
         doThrow(new DataAccessResourceFailureException("Connection refused to PostgreSQL server"))
-                .when(userRepository).save(any());
+                .when(userRepository).saveAndFlush(any());
 
         CreateUserRequest request = CreateUserRequest.builder()
                 .name("New User")
@@ -285,19 +287,9 @@ class UserControllerIT {
     @Test
     @DisplayName("Cenário 9: Deve falhar ao tentar criar usuário com email duplicado")
     void shouldFailWhenEmailAlreadyExists() throws Exception {
-        userRepository.save(
-                User.builder()
-                        .name("Existing User")
-                        .tenantId(UUID.fromString(TENANT_1_ID))
-                        .email("admin@tenant1.com")
-                        .passwordHash("$2a$10$fEKJmHqSHjlxzqVFGZb5Gu8aDT8rFuCn/7bMZa7F0nCc5Z9L6z5tS")
-                        .role(UserRole.OPERATOR)
-                        .build()
-        );
-
         CreateUserRequest request = CreateUserRequest.builder()
                 .name("Duplicate Email User")
-                .email("admin@tenant1.com")
+                .email("user1@tenant1.com")
                 .password("password123")
                 .role(UserRole.OPERATOR)
                 .build();

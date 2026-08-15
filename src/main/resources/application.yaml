@@ -11,6 +11,9 @@ spring:
     default-property-inclusion: non_null
     time-zone: UTC
 
+  jpa:
+    open-in-view: false
+
 # Propriedades genéricas do sistema
 app:
   tenant:
