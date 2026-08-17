@@ -29,6 +29,11 @@ public class UserController {
     @PostMapping
     public ResponseEntity<ApiResponseData<UserResponse>> create(@Valid @RequestBody CreateUserRequest request) {
         log.info("Creating user");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null || !auth.isAuthenticated() || auth.getPrincipal() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         UserResponse response = userService.create(request);
         log.info("User created successfully for tenant: {}", response.getTenantId());
