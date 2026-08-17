@@ -48,6 +48,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/users").hasAnyAuthority("ADMIN", "MASTER")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/users/**").hasAnyAuthority("ADMIN", "MASTER")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/users/**").hasAnyAuthority("ADMIN", "MASTER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/insurances").hasAnyAuthority("ADMIN", "MASTER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/insurances/**").hasAnyAuthority("ADMIN", "MASTER")
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/insurances/**").hasAnyAuthority("ADMIN", "MASTER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/insurances/**").hasAnyAuthority("ADMIN", "MASTER")
 
                         // Qualquer outra rota exige estar autenticado
                         .anyRequest().authenticated()

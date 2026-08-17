@@ -319,8 +319,8 @@ class UserControllerIT {
                         .header("X-Tenant-ID", nonexistentTenantId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.statusCode").value(400));
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.statusCode").value(404));
     }
 
     @Test
@@ -472,6 +472,6 @@ class UserControllerIT {
         mockMvc.perform(delete("/api/v1/users/{id}", user1.getId())
                         .header("Authorization", "Bearer " + adminToken)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 }

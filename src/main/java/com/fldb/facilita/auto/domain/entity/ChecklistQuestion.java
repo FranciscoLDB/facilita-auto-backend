@@ -3,6 +3,7 @@ package com.fldb.facilita.auto.domain.entity;
 import com.fldb.facilita.auto.domain.enums.ResponseType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import java.time.OffsetDateTime;
@@ -44,7 +45,7 @@ public class ChecklistQuestion {
     @Column(name = "options_json", columnDefinition = "jsonb")
     private List<String> optionsJson;
 
-    @Builder.Default
-    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private OffsetDateTime createdAt;
 }

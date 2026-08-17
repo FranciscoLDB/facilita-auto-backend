@@ -76,18 +76,17 @@ public class AdminApiKeyFilter extends OncePerRequestFilter {
         try {
             tenantId = UUID.fromString(tenantHeader);
             if (!tenantRepository.existsById(tenantId)) {
-                setResponse(response, "Tenant não encontrado.");
+                setResponse(response, "Tenant não encontrado.", HttpStatus.NOT_FOUND);
                 return null;
             }
         } catch (Exception e) {
-            setResponse(response, e.getMessage());
+            setResponse(response, e.getMessage(), HttpStatus.BAD_REQUEST);
             return null;
         }
         return tenantId;
     }
 
-    private static void setResponse(HttpServletResponse response, String detailedMessage) throws IOException {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+    private static void setResponse(HttpServletResponse response, String detailedMessage, HttpStatus status) throws IOException {
         response.setStatus(status.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         ApiResponseError errorResponse = ApiResponseError.builder()

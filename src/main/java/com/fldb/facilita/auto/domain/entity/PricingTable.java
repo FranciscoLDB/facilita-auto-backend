@@ -2,6 +2,8 @@ package com.fldb.facilita.auto.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -63,7 +65,7 @@ public class PricingTable {
     @Column(name = "night_shift_fee", nullable = false, precision = 10, scale = 2)
     private BigDecimal nightShiftFee;
 
-    @Builder.Default
-    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private OffsetDateTime createdAt;
 }

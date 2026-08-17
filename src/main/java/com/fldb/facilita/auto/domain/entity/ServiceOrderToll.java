@@ -2,6 +2,8 @@ package com.fldb.facilita.auto.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -29,7 +31,7 @@ public class ServiceOrderToll {
     @Column(name = "receipt_photo_url", nullable = false, length = 500)
     private String receiptPhotoUrl;
 
-    @Builder.Default
-    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private OffsetDateTime createdAt;
 }

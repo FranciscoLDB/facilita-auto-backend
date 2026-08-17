@@ -2,6 +2,8 @@ package com.fldb.facilita.auto.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -32,7 +34,7 @@ public class ServiceOrderChecklistAnswer {
     @Column(name = "photo_url", length = 500)
     private String photoUrl;
 
-    @Builder.Default
-    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private OffsetDateTime createdAt;
 }

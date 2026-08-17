@@ -3,6 +3,8 @@ package com.fldb.facilita.auto.domain.entity;
 import com.fldb.facilita.auto.domain.enums.ServiceOrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -35,7 +37,7 @@ public class ServiceOrderStatusHistory {
     @Column(name = "new_status", nullable = false, length = 30)
     private ServiceOrderStatus newStatus;
 
-    @Builder.Default
-    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private OffsetDateTime createdAt;
 }

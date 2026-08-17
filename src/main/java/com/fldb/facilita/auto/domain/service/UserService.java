@@ -5,6 +5,7 @@ import com.fldb.facilita.auto.api.config.security.CustomUserDetails;
 import com.fldb.facilita.auto.api.dto.user.CreateUserRequest;
 import com.fldb.facilita.auto.api.dto.user.UserResponse;
 import com.fldb.facilita.auto.api.exception.BusinessException;
+import com.fldb.facilita.auto.api.exception.ResourceNotFoundException;
 import com.fldb.facilita.auto.domain.entity.User;
 import com.fldb.facilita.auto.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,15 +42,7 @@ public class UserService {
 
         userRepository.saveAndFlush(user);
 
-        return UserResponse.builder()
-                .id(user.getId())
-                .tenantId(user.getTenantId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .role(user.getRole())
-                .active(user.getIsActive())
-                .createdAt(user.getCreatedAt())
-                .build();
+        return UserResponse.fromEntity(user);
     }
 
     @Transactional(readOnly = true)
@@ -60,7 +53,7 @@ public class UserService {
     @Transactional
     public void delete(UUID userId) {
         if (userRepository.findById(userId).isEmpty()) {
-            throw new BusinessException("Usuário não encontrado.");
+            throw new ResourceNotFoundException("User not found");
         }
         userRepository.deleteById(userId);
     }

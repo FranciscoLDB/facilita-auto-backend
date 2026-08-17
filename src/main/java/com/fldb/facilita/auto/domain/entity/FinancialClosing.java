@@ -3,6 +3,8 @@ package com.fldb.facilita.auto.domain.entity;
 import com.fldb.facilita.auto.domain.enums.FinancialClosingStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -42,9 +44,9 @@ public class FinancialClosing {
     @Column(nullable = false, length = 20)
     private FinancialClosingStatus status = FinancialClosingStatus.OPEN;
 
-    @Builder.Default
-    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private OffsetDateTime createdAt;
 
     @Builder.Default
     @ManyToMany
