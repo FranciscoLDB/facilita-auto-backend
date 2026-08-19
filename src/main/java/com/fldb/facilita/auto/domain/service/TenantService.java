@@ -5,7 +5,7 @@ import com.fldb.facilita.auto.api.dto.tenant.TenantResponse;
 import com.fldb.facilita.auto.api.exception.BusinessException;
 import com.fldb.facilita.auto.api.exception.ErrorCode;
 import com.fldb.facilita.auto.api.exception.ResourceNotFoundException;
-import com.fldb.facilita.auto.domain.entity.Tenant;
+import com.fldb.facilita.auto.domain.entity.company.Tenant;
 import com.fldb.facilita.auto.domain.repository.TenantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

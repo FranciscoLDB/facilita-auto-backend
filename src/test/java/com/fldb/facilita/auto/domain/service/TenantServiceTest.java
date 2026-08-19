@@ -3,7 +3,7 @@ package com.fldb.facilita.auto.domain.service;
 import com.fldb.facilita.auto.api.dto.tenant.CreateTenantRequest;
 import com.fldb.facilita.auto.api.dto.tenant.TenantResponse;
 import com.fldb.facilita.auto.api.exception.BusinessException;
-import com.fldb.facilita.auto.domain.entity.Tenant;
+import com.fldb.facilita.auto.domain.entity.company.Tenant;
 import com.fldb.facilita.auto.domain.repository.TenantRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

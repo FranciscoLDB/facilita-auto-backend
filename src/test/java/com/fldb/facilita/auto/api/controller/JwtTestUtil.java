@@ -1,7 +1,7 @@
 package com.fldb.facilita.auto.api.controller;
 
 import com.fldb.facilita.auto.api.config.security.JwtTokenProvider;
-import com.fldb.facilita.auto.domain.entity.User;
+import com.fldb.facilita.auto.domain.entity.company.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.UUID;

@@ -1,6 +1,6 @@
 package com.fldb.facilita.auto.api.dto.tenant;
 
-import com.fldb.facilita.auto.domain.entity.Tenant;
+import com.fldb.facilita.auto.domain.entity.company.Tenant;
 import lombok.*;
 
 import java.time.OffsetDateTime;

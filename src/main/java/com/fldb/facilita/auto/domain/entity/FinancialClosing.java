@@ -1,5 +1,7 @@
 package com.fldb.facilita.auto.domain.entity;
 
+import com.fldb.facilita.auto.domain.entity.company.Tenant;
+import com.fldb.facilita.auto.domain.entity.service.ServiceOrderItem;
 import com.fldb.facilita.auto.domain.enums.FinancialClosingStatus;
 import jakarta.persistence.*;
 import lombok.*;

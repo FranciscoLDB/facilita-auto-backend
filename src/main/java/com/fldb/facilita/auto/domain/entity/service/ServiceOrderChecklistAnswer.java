@@ -1,5 +1,6 @@
-package com.fldb.facilita.auto.domain.entity;
+package com.fldb.facilita.auto.domain.entity.service;
 
+import com.fldb.facilita.auto.domain.entity.ChecklistQuestion;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

@@ -1,4 +1,4 @@
-package com.fldb.facilita.auto.domain.entity;
+package com.fldb.facilita.auto.domain.entity.company;
 
 import jakarta.persistence.*;
 import lombok.*;

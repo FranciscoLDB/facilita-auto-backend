@@ -1,5 +1,7 @@
 package com.fldb.facilita.auto.domain.entity;
 
+import com.fldb.facilita.auto.domain.entity.company.User;
+import com.fldb.facilita.auto.domain.entity.service.ServiceOrder;
 import com.fldb.facilita.auto.domain.enums.ServiceOrderStatus;
 import jakarta.persistence.*;
 import lombok.*;

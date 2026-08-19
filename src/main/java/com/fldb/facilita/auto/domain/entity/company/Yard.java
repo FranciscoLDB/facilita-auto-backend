@@ -1,4 +1,4 @@
-package com.fldb.facilita.auto.domain.entity;
+package com.fldb.facilita.auto.domain.entity.company;
 
 import com.fldb.facilita.auto.domain.model.Address;
 import jakarta.persistence.*;

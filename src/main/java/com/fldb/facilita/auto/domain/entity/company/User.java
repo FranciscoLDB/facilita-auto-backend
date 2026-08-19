@@ -1,4 +1,4 @@
-package com.fldb.facilita.auto.domain.entity;
+package com.fldb.facilita.auto.domain.entity.company;
 
 import com.fldb.facilita.auto.domain.enums.UserRole;
 import jakarta.persistence.*;

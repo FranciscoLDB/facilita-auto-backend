@@ -1,6 +1,6 @@
 package com.fldb.facilita.auto.domain.repository;
 
-import com.fldb.facilita.auto.domain.entity.User;
+import com.fldb.facilita.auto.domain.entity.company.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

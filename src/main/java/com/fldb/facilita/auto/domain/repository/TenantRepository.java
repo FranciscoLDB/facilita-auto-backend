@@ -1,10 +1,9 @@
 package com.fldb.facilita.auto.domain.repository;
 
-import com.fldb.facilita.auto.domain.entity.Tenant;
+import com.fldb.facilita.auto.domain.entity.company.Tenant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository

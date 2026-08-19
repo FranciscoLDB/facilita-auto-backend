@@ -1,6 +1,6 @@
 package com.fldb.facilita.auto.api.config.security;
 
-import com.fldb.facilita.auto.domain.entity.User;
+import com.fldb.facilita.auto.domain.entity.company.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

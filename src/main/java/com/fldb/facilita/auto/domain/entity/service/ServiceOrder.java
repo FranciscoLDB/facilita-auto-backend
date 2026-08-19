@@ -1,5 +1,9 @@
-package com.fldb.facilita.auto.domain.entity;
+package com.fldb.facilita.auto.domain.entity.service;
 
+import com.fldb.facilita.auto.domain.entity.*;
+import com.fldb.facilita.auto.domain.entity.company.Tenant;
+import com.fldb.facilita.auto.domain.entity.company.User;
+import com.fldb.facilita.auto.domain.entity.company.Yard;
 import com.fldb.facilita.auto.domain.enums.ServiceOrderStatus;
 import com.fldb.facilita.auto.domain.model.Address;
 import com.fldb.facilita.auto.domain.model.InsuredDetails;

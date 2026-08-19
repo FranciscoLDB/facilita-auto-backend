@@ -1,8 +1,8 @@
 package com.fldb.facilita.auto.api.controller;
 
 import com.fldb.facilita.auto.api.dto.user.CreateUserRequest;
-import com.fldb.facilita.auto.domain.entity.Tenant;
-import com.fldb.facilita.auto.domain.entity.User;
+import com.fldb.facilita.auto.domain.entity.company.Tenant;
+import com.fldb.facilita.auto.domain.entity.company.User;
 import com.fldb.facilita.auto.domain.enums.UserRole;
 import com.fldb.facilita.auto.domain.repository.TenantRepository;
 import com.fldb.facilita.auto.domain.repository.UserRepository;
@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;

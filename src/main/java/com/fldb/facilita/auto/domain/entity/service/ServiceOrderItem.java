@@ -1,4 +1,4 @@
-package com.fldb.facilita.auto.domain.entity;
+package com.fldb.facilita.auto.domain.entity.service;
 
 import com.fldb.facilita.auto.domain.enums.ItemType;
 import com.fldb.facilita.auto.domain.enums.OrderItemStatus;

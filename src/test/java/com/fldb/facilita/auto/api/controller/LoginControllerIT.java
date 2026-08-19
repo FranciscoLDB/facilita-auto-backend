@@ -2,8 +2,8 @@ package com.fldb.facilita.auto.api.controller;
 
 import com.fldb.facilita.auto.api.config.security.JwtTokenProvider;
 import com.fldb.facilita.auto.api.dto.ApiResponseData;
-import com.fldb.facilita.auto.domain.entity.Tenant;
-import com.fldb.facilita.auto.domain.entity.User;
+import com.fldb.facilita.auto.domain.entity.company.Tenant;
+import com.fldb.facilita.auto.domain.entity.company.User;
 import com.fldb.facilita.auto.domain.enums.UserRole;
 import com.fldb.facilita.auto.domain.repository.TenantRepository;
 import com.fldb.facilita.auto.domain.repository.UserRepository;

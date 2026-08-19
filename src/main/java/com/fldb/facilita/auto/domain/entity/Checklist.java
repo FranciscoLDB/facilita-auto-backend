@@ -1,5 +1,6 @@
 package com.fldb.facilita.auto.domain.entity;
 
+import com.fldb.facilita.auto.domain.entity.company.Tenant;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

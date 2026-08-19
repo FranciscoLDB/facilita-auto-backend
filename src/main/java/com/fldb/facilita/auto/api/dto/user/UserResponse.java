@@ -1,6 +1,6 @@
 package com.fldb.facilita.auto.api.dto.user;
 
-import com.fldb.facilita.auto.domain.entity.User;
+import com.fldb.facilita.auto.domain.entity.company.User;
 import com.fldb.facilita.auto.domain.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

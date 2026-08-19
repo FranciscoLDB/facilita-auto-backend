@@ -1,18 +1,14 @@
 package com.fldb.facilita.auto.domain.service;
 
-import com.fldb.facilita.auto.api.config.security.AuthTokenPrincipal;
-import com.fldb.facilita.auto.api.config.security.CustomUserDetails;
 import com.fldb.facilita.auto.api.dto.user.CreateUserRequest;
 import com.fldb.facilita.auto.api.dto.user.UserResponse;
 import com.fldb.facilita.auto.api.exception.BusinessException;
 import com.fldb.facilita.auto.api.exception.ResourceNotFoundException;
-import com.fldb.facilita.auto.domain.entity.User;
+import com.fldb.facilita.auto.domain.entity.company.User;
 import com.fldb.facilita.auto.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
