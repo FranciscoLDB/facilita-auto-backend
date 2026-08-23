@@ -34,11 +34,11 @@ public class PricingTable {
     @Column(name = "tenant_id", nullable = false, updatable = false)
     private UUID tenantId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "insurance_company_id", nullable = false)
     private InsuranceCompany insuranceCompany;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "service_type_id", nullable = false)
     private ServiceType serviceType;
 

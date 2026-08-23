@@ -1,14 +1,10 @@
 package com.fldb.facilita.auto.domain.service;
 
-import com.fldb.facilita.auto.api.dto.insurance.CreateInsuranceRequest;
-import com.fldb.facilita.auto.api.dto.insurance.InsuranceMapper;
-import com.fldb.facilita.auto.api.dto.insurance.UpdateInsuranceRequest;
 import com.fldb.facilita.auto.api.dto.service.type.CreateServiceTypeRequest;
 import com.fldb.facilita.auto.api.dto.service.type.ServiceTypeMapper;
 import com.fldb.facilita.auto.api.dto.service.type.ServiceTypeResponse;
 import com.fldb.facilita.auto.api.dto.service.type.UpdateServiceTypeRequest;
 import com.fldb.facilita.auto.api.exception.ResourceNotFoundException;
-import com.fldb.facilita.auto.domain.entity.InsuranceCompany;
 import com.fldb.facilita.auto.domain.entity.ServiceType;
 import com.fldb.facilita.auto.domain.repository.ServiceTypeRepository;
 import lombok.RequiredArgsConstructor;

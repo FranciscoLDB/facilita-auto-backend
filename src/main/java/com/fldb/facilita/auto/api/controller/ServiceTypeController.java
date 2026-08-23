@@ -1,13 +1,9 @@
 package com.fldb.facilita.auto.api.controller;
 
 import com.fldb.facilita.auto.api.dto.ApiResponseData;
-import com.fldb.facilita.auto.api.dto.insurance.CreateInsuranceRequest;
-import com.fldb.facilita.auto.api.dto.insurance.InsuranceResponse;
-import com.fldb.facilita.auto.api.dto.insurance.UpdateInsuranceRequest;
 import com.fldb.facilita.auto.api.dto.service.type.CreateServiceTypeRequest;
 import com.fldb.facilita.auto.api.dto.service.type.ServiceTypeResponse;
 import com.fldb.facilita.auto.api.dto.service.type.UpdateServiceTypeRequest;
-import com.fldb.facilita.auto.domain.service.InsuranceService;
 import com.fldb.facilita.auto.domain.service.ServiceTypeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
