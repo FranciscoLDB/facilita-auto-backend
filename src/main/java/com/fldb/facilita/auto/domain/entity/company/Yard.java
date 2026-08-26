@@ -4,6 +4,7 @@ import com.fldb.facilita.auto.domain.model.Address;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.TenantId;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -21,9 +22,9 @@ public class Yard {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id", nullable = false)
-    private Tenant tenant;
+    @TenantId
+    @Column(name = "tenant_id", nullable = false, updatable = false)
+    private UUID tenantId;
 
     @Column(nullable = false, length = 100)
     private String name;
@@ -37,9 +38,6 @@ public class Yard {
             @AttributeOverride(name = "complement", column = @Column(name = "yard_complement", length = 100))
     })
     private Address address;
-
-    @Column(name = "max_capacity", nullable = false)
-    private Integer maxCapacity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
