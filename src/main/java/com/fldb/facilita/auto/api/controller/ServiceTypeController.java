@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -19,6 +20,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/service-types")
+@PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
 @RequiredArgsConstructor
 public class ServiceTypeController {
 
@@ -41,6 +43,7 @@ public class ServiceTypeController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('OPERATOR', 'ADMIN', 'MASTER')")
     public ResponseEntity<ApiResponseData<Page<ServiceTypeResponse>>> findAll(Pageable pageable) {
         Page<ServiceTypeResponse> users = serviceTypeService.findAll(pageable);
 

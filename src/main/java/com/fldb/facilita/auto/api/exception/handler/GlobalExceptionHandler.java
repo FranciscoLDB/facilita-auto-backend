@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -186,6 +187,27 @@ public class GlobalExceptionHandler {
                                 .message(ErrorCode.DATA_INTEGRITY_ERROR.getDefaultMessage())
                                 .build()
                 ))
+                .build();
+
+        return ResponseEntity.status(status).body(response);
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ApiResponseError> handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+
+        GeneralErrorItem errorItem = GeneralErrorItem.builder()
+                .code(ErrorCode.INTERNAL_ERROR)
+                .message("Ocorreu um erro inesperado no sistema.")
+                .build();
+
+        ApiResponseError response = ApiResponseError.builder()
+                .statusCode(status.value())
+                .statusMessage(status.name())
+                .message("Acesso negado.")
+                .detailedMessage("Não foi possível concluir a operação devido a uma negação de acesso.")
+                .timestamp(OffsetDateTime.now())
+                .errors(List.of(errorItem))
                 .build();
 
         return ResponseEntity.status(status).body(response);
